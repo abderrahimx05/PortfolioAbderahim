@@ -511,6 +511,13 @@ footer > .shell{ display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-b
   background:rgba(10,17,32,.92); backdrop-filter:blur(10px); border:1px solid rgba(158,199,240,.4); color:var(--paper);
   border-radius:999px; padding:.6rem 1.1rem; font-size:.9rem; transition:opacity .3s, transform .35s var(--ease); }
 .toast.show{ opacity:1; transform:translate(-50%,0); }
+.mailmenu{ position:fixed; z-index:95; min-width:220px; padding:.35rem; border-radius:12px;
+  background:rgba(10,17,32,.96); backdrop-filter:blur(12px); border:1px solid rgba(158,199,240,.3); box-shadow:0 18px 40px rgba(0,0,0,.45);
+  opacity:0; transform:translateY(6px); pointer-events:none; transition:opacity .2s, transform .25s var(--ease); }
+.mailmenu.open{ opacity:1; transform:none; pointer-events:auto; }
+.mailmenu p{ margin:.35rem .7rem .45rem; font-size:.78rem; color:var(--muted); }
+.mailmenu button{ display:block; width:100%; text-align:left; font:inherit; font-size:.95rem; color:var(--paper); background:none; border:0; border-radius:8px; padding:.6rem .7rem; cursor:pointer; transition:background .2s; }
+.mailmenu button:hover, .mailmenu button:focus-visible{ background:rgba(158,199,240,.1); outline:none; }
 
 /* ══ 18. RÉVÉLATIONS ═════════════════════════════════════ */
 .r{ opacity:0; transform:translateY(16px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
@@ -982,6 +989,13 @@ footer > .shell{ display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-b
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="mailmenu" id="mailmenu" role="menu" aria-label="Choisir une messagerie" hidden>
+  <p>M'écrire avec…</p>
+  <button type="button" role="menuitem" data-mail="gmail">Gmail</button>
+  <button type="button" role="menuitem" data-mail="outlook">Outlook</button>
+  <button type="button" role="menuitem" data-mail="app">Application par défaut</button>
+  <button type="button" role="menuitem" data-mail="copy">Copier l'adresse</button>
+</div>
 <button class="top" id="toTop" aria-label="Revenir en haut">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
@@ -1263,6 +1277,55 @@ function showToast(msg){
   toast.textContent = msg; toast.classList.add('show');
   clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 2400);
 }
+/* Menu « M'écrire avec… » : Gmail, Outlook, app par défaut (mailto:) ou copie.
+   Un mailto: seul n'ouvre souvent rien sur un ordinateur sans logiciel configuré. */
+const mailMenu = $('#mailmenu');
+let mailDraft = { subject:'', body:'' }, mailOpener = null;
+const enc = encodeURIComponent;
+const MAIL_URLS = {
+  gmail:   d => 'https://mail.google.com/mail/?view=cm&fs=1&to=' + enc(PROFILE.email) + '&su=' + enc(d.subject) + '&body=' + enc(d.body),
+  outlook: d => 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(PROFILE.email) + '&subject=' + enc(d.subject) + '&body=' + enc(d.body),
+  app:     d => 'mailto:' + PROFILE.email + '?subject=' + enc(d.subject) + '&body=' + enc(d.body)
+};
+function closeMailMenu(){
+  if (mailMenu.hidden) return;
+  mailMenu.classList.remove('open');
+  setTimeout(() => { if (!mailMenu.classList.contains('open')) mailMenu.hidden = true; }, 250);
+  if (mailOpener) mailOpener.focus({ preventScroll:true });
+  mailOpener = null;
+}
+function composeMail(subject = '', body = '', opener = null){
+  mailDraft = { subject, body }; mailOpener = opener;
+  mailMenu.hidden = false;
+  const r = (opener || document.body).getBoundingClientRect(), m = mailMenu.getBoundingClientRect();
+  const left = Math.min(Math.max(12, r.left), innerWidth - m.width - 12);
+  const top  = (r.bottom + m.height + 8 < innerHeight) ? r.bottom + 8 : Math.max(12, r.top - m.height - 8);
+  mailMenu.style.left = left + 'px'; mailMenu.style.top = top + 'px';
+  requestAnimationFrame(() => { mailMenu.classList.add('open'); $('button', mailMenu).focus({ preventScroll:true }); });
+}
+mailMenu.addEventListener('click', async e => {
+  const b = e.target.closest('[data-mail]'); if (!b) return;
+  const k = b.dataset.mail;
+  if (k === 'copy'){
+    try { await navigator.clipboard.writeText(PROFILE.email); showToast('Adresse copiée : ' + PROFILE.email); }
+    catch(err){ showToast(PROFILE.email); }
+  } else if (k === 'app'){
+    location.href = MAIL_URLS.app(mailDraft);
+  } else {
+    window.open(MAIL_URLS[k](mailDraft), '_blank', 'noopener');
+  }
+  closeMailMenu();
+});
+document.addEventListener('click', e => {
+  if (!mailMenu.contains(e.target) && !e.target.closest('a[href^="mailto:"]')) closeMailMenu();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMailMenu(); });
+addEventListener('scroll', closeMailMenu, { passive:true });
+$$('a[href^="mailto:"]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  composeMail('Contact portfolio', '', a);
+}));
+
 $$('[data-copy-email]').forEach(b => b.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(PROFILE.email);
@@ -1283,11 +1346,10 @@ form.addEventListener('submit', e => {
     note.style.color = 'var(--ember)';
     return;
   }
-  note.textContent = 'Votre logiciel de messagerie s\'ouvre avec le message pré-rempli.';
+  note.textContent = 'Choisissez votre messagerie : le message sera pré-rempli.';
   note.style.color = 'var(--muted)';
-  location.href = 'mailto:' + PROFILE.email
-    + '?subject=' + encodeURIComponent('Contact portfolio — ' + name)
-    + '&body=' + encodeURIComponent(msg + '\n\n— ' + name + ' (' + mail + ')');
+  composeMail('Contact portfolio — ' + name, msg + '\n\n— ' + name + ' (' + mail + ')',
+    $('[type="submit"]', form) || form);
 });
 
 /* ═══ 12. RÉSEAU DE NŒUDS DU HERO ══════════════════════════ */
