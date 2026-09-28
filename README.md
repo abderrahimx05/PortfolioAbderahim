@@ -13,5 +13,5 @@ PHP 8 / Symfony 6 · React · APIs REST · Docker · GitLab CI/CD · Python · B
 
 Une page statique autonome (`index.html`), sans dépendance ni étape de build : HTML, CSS et JavaScript natifs.
 
-Pour le publier avec GitHub Pages : *Settings → Pages → Deploy from a branch → `main` / root*.
+Déployé avec GitHub Pages : *Settings → Pages → Deploy from a branch → `master` / `/ (root)`* — le site est alors en ligne sur https://abderrahimx05.github.io/PortfolioAbderahim/.
 `portfolioHome.html` redirige vers `index.html` pour ne pas casser les anciens liens.
