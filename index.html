@@ -145,7 +145,9 @@ body.cursor-on.hot .cur{ opacity:0; }
 .nav-links a:not(.btn):hover::after{ right:0; }
 .nav .btn-cv{ font-size:.87rem; padding:.5rem .95rem; }
 @media (max-width:520px){ .nav .btn-cv{ font-size:.8rem; padding:.45rem .8rem; white-space:nowrap; } .mark em{ display:none; } }
-@media (max-width:960px){ .nav-links a:not(.btn){ display:none; } }
+.nav-links a, .nav .btn-cv{ white-space:nowrap; }
+@media (max-width:1180px){ .mark em{ display:none; } .nav-links{ gap:1.05rem; } .nav-links a{ font-size:.88rem; } }
+@media (max-width:1040px){ .nav-links a:not(.btn){ display:none; } }
 
 /* ══ 5. BOUTONS ══════════════════════════════════════════ */
 .btn{
@@ -455,6 +457,28 @@ body.cursor-on.hot .cur{ opacity:0; }
 .cert span{ color:var(--muted); font-size:.9rem; }
 @media (max-width:720px){ .arrowline{ grid-template-columns:1fr; gap:1rem; } .arrowline svg{ transform:rotate(90deg); justify-self:center; width:40px; } }
 
+/* ══ 15b. CERTIFICATIONS ═══════════════════════════════ */
+.certs{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+.ccard{ position:relative; display:flex; flex-direction:column; gap:.9rem; text-decoration:none; color:inherit;
+  border:1px solid var(--line); border-radius:16px; padding:1.3rem 1.4rem; background:var(--glass); overflow:hidden;
+  transition:border-color .3s, transform .35s var(--ease), box-shadow .35s; }
+.ccard::before{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .35s;
+  background:radial-gradient(240px 150px at var(--mx,50%) var(--my,50%), rgba(158,199,240,.1), transparent 70%); }
+.ccard:hover{ border-color:rgba(158,199,240,.45); transform:translateY(-3px); box-shadow:0 18px 40px -24px rgba(126,180,232,.7); }
+.ccard:hover::before{ opacity:1; }
+.ccard > *{ position:relative; }
+.ccard.feat{ grid-column:1 / -1; border-color:rgba(158,199,240,.32); background:linear-gradient(140deg,rgba(158,199,240,.09),rgba(6,10,18,0) 70%); }
+.ccard .chead{ display:flex; align-items:center; gap:.8rem; }
+.ccard .logo{ flex:none; width:40px; height:40px; border-radius:10px; display:grid; place-items:center; border:1px solid var(--line); background:rgba(6,10,18,.6); }
+.ccard .logo svg{ width:20px; height:20px; }
+.ccard .issuer{ font-size:.82rem; color:var(--muted); line-height:1.3; }
+.ccard .issuer b{ display:block; color:var(--paper); font-weight:500; font-size:.9rem; }
+.ccard h3{ font-size:1.08rem; letter-spacing:-.018em; line-height:1.3; }
+.ccard.feat h3{ font-size:clamp(1.2rem,2.4vw,1.45rem); }
+.ccard .verify{ margin-top:auto; display:inline-flex; align-items:center; gap:.45rem; font-family:"JetBrains Mono",monospace; font-size:.74rem; color:var(--ice); }
+.ccard .verify svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.ccard .verify .ok{ color:#8FE3B6; }
+
 /* ══ 16. POURQUOI MOI ════════════════════════════════════ */
 .why{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(1.5rem,3vw,2.6rem); }
 .why article{ border-top:1px solid var(--line); padding-top:1.3rem; transition:border-color .4s; }
@@ -572,6 +596,7 @@ footer > .shell{ display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-b
   <a href="#projet"><b>Projet</b><i></i></a>
   <a href="#stack"><b>Stack</b><i></i></a>
   <a href="#cloud"><b>Cap cloud</b><i></i></a>
+  <a href="#certifications"><b>Certifications</b><i></i></a>
   <a href="#pourquoi"><b>Pourquoi moi</b><i></i></a>
   <a href="#contact"><b>Contact</b><i></i></a>
 </nav>
@@ -588,6 +613,7 @@ footer > .shell{ display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-b
       <a href="#projet">Projet</a>
       <a href="#stack">Stack</a>
       <a href="#cloud">Cap cloud</a>
+      <a href="#certifications">Certifications</a>
       <a href="#contact">Contact</a>
       <a class="btn btn-cv btn-solid" data-link="cv" href="CV_Abderahim_FullStack_DevOps.pdf" download="CV_Abderahim_Ait_Chraa_FullStack_DevOps.pdf" target="_blank" rel="noopener">Télécharger mon CV</a>
     </nav>
@@ -919,6 +945,60 @@ footer > .shell{ display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-b
       <div class="cell" data-spot><h4>Automatisation</h4><p>Scripts Python et Bash pour les traitements de données, les imports et exports, les rapports et les tâches d'exploitation — remplacer les gestes répétés par du code.</p><div class="chips"><span class="chip">Python</span><span class="chip">Bash</span><span class="chip">Tâches planifiées</span></div></div>
       <div class="cell" data-spot><h4>En apprentissage actif</h4><p>Orchestration et infrastructure décrite en code : monter des clusters, décrire les environnements plutôt que les configurer à la main.</p><div class="chips"><span class="chip">Kubernetes</span><span class="chip">Terraform</span><span class="chip">Ansible</span><span class="chip">Helm</span></div></div>
       <div class="cell" data-spot><h4>Cloud et observabilité</h4><p>Notions et travaux pratiques sur AWS et Azure, prolongés par un projet personnel hébergé sur Azure. Côté supervision, la suite que je veux maîtriser ensuite.</p><div class="chips"><span class="chip">Azure</span><span class="chip">AWS</span><span class="chip">Grafana</span><span class="chip">Prometheus</span><span class="chip">ELK</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CERTIFICATIONS ══ -->
+<!-- Intitulés à compléter : remplacer le texte des <h3> par le titre exact de chaque certificat. -->
+<section class="sec" id="certifications">
+  <div class="shell">
+    <div class="sec-head r">
+      <span class="kicker">Certifications</span>
+      <h2 data-words>Des acquis vérifiables, en un clic</h2>
+      <p>Une spécialisation et des certificats Coursera, une réussite Microsoft Learn : de la formation continue en parallèle de l'alternance. Chaque carte renvoie vers la page officielle de vérification.</p>
+    </div>
+    <div class="certs r">
+        <a class="ccard feat" data-spot href="https://www.coursera.org/account/accomplishments/specialization/XDAA017OEZGA" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Spécialisation · plusieurs cours</span></span>
+          <h3>Spécialisation Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://learn.microsoft.com/en-us/users/abderahimaitchraa-3751/achievements/fq8h6yax" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9.5" height="9.5" fill="#F25022"/><rect x="12.5" y="2" width="9.5" height="9.5" fill="#7FBA00"/><rect x="2" y="12.5" width="9.5" height="9.5" fill="#00A4EF"/><rect x="12.5" y="12.5" width="9.5" height="9.5" fill="#FFB900"/></svg></span><span class="issuer"><b>Microsoft Learn</b>Réussite Microsoft</span></span>
+          <h3>Réussite Microsoft Learn</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/BNE7OCWU9I8T" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/RURJ66GNV3UA" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/J7QYUG1SVN7R" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/3959VRAH3YQQ" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/TMF3B4WMLD30" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
+        <a class="ccard" data-spot href="https://www.coursera.org/account/accomplishments/verify/GW2B664AY4QJ" target="_blank" rel="noopener">
+          <span class="chead"><span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#5B9BEA" stroke-width="3"/><path d="M16.5 9.2a5 5 0 1 0 0 5.6" fill="none" stroke="#E7EEF8" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="issuer"><b>Coursera</b>Certificat de cours</span></span>
+          <h3>Certificat de cours Coursera</h3>
+          <span class="verify"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Vérifier le certificat ↗</span>
+        </a>
     </div>
   </div>
 </section>
