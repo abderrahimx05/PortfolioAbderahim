@@ -33,7 +33,7 @@ jobs:
       - name: Préparer le site à publier
         run: |
           mkdir _site
-          cp index.html portfolioHome.html CV_Abderahim_FullStack_DevOps.pdf _site/
+          cp index.html portfolioHome.html CV_Abderahim_AitChraa_DevOps.pdf _site/
 
       - uses: actions/upload-pages-artifact@v4
         with:
